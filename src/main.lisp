@@ -108,6 +108,19 @@
   x)
 
 (defmacro select (&body body)
+  "Filter the first item of BODY (which is expected to be a list) and only keep
+   items which satisfy the predicate (rest of the BODY). The BODY may contain
+   expressions which walk the item down to the location that is to be used for the
+   predicate.
+
+   Example:
+   (->. (kget \"Deployment\")
+     (key \"items\")
+     (select
+       (key \"metadata\")
+       (key \"name\")
+       (predicate name (search \"farmer\"))))
+   returns all deployments whose .metadata.name contains \"farmer\"."
   (let ((x (gensym)))
     `(filter ,(car body) (lambda (,x) (-> ,x ,@ (cdr body))))))
 
