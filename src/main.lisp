@@ -190,6 +190,15 @@
      ,@body
      ,var))
 
+(defun get-path (o path)
+  "Follow PATH down the object O and return the subtree there. PATH is
+   the list of keys to follow."
+  (flet ((go-down-key-or-list-item (object index)
+           (cond ((listp object) (nth index object))
+                 ((hash-table-p object) (gethash index object))
+                 (t (error (format nil "Can't traverse type ~a." (type-of object)))))))
+    (reduce #'go-down-key-or-list-item path :initial-value o)))
+
 (defmacro foreach (lst &body body)
   (let ((x (gensym)))
     `(mapcar (lambda (,x)
