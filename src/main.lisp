@@ -214,6 +214,17 @@
           (t (error (format nil "Can't traverse type ~a." (type-of target)))))
     o))
 
+(defun deep-copy (o)
+  "Return a deep copy of a data structure O which consists of (HASH-TABLE :TEST EQUALP), LIST, or some simple data type."
+  (cond ((listp o)
+         (nreverse (reduce #'(lambda (o it) (cons (deep-copy it) o)) o :initial-value nil)))
+        ((hash-table-p o)
+         (let ((new-obj (make-object)))
+           (loop for k being the hash-keys of o using (hash-value val)
+                 do (set-key new-obj k (deep-copy val)))
+           new-obj))
+        (t o)))
+
 (defmacro foreach (lst &body body)
   (let ((x (gensym)))
     `(mapcar (lambda (,x)
