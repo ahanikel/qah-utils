@@ -161,11 +161,34 @@
 (defun (setf key) (new-value hashmap name)
   (setf (gethash name hashmap) new-value))
 
+(defun set-key (hashmap name value)
+  "Set the key NAME in HASHMAP to VALUE and return the modified HASHMAP."
+  (setf (key hashmap name) value)
+  hashmap)
+
+(defun del-key (hashmap name)
+  (remhash name hashmap)
+  hashmap)
+
+(defun update-key (hashmap name f)
+  (setf (key hashmap name) (funcall f (key hashmap name))))
+
+(defun new-object (hashmap name)
+  (set-key hashmap name (make-object)))
+
+(defun new-list (hashmap name)
+  (set-key hashmap name nil))
+
+(defun add-to-list (hashmap name item)
+  (update-key hashmap name
+              #'(lambda (l)
+                  (cons item l))))
+
 (defmacro with (val var &body body)
   "Set the variable VAR to VAL and evaluate the BODY. Return VAR."
   `(let ((,var ,val))
-    ,@body
-    ,var))
+     ,@body
+     ,var))
 
 (defmacro foreach (lst &body body)
   (let ((x (gensym)))
