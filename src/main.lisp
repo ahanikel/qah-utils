@@ -196,6 +196,17 @@
                (-> ,x ,@body))
              ,lst)))
 
+(defun uniq (l &optional (equals-fn #'equalp))
+  "Returns a new list, removing all the duplicates from l. l must be sorted."
+  (reduce
+   (lambda (el res)
+     (if (funcall equals-fn (car res) el)
+         res
+         (cons el res)))
+   l
+   :initial-value nil
+   :from-end t))
+
 (defun safe-encode (string)
   "Encode strings so they can contain whitespace and special characters, but
    retain slashes and colons for better readability of path names."
