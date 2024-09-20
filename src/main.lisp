@@ -9,6 +9,9 @@
 
 (in-package #:qah-utils)
 
+(defun make-object ()
+  (make-hash-table :test 'equalp))
+
 ;;-----------------------------------------------------------------------------
 ;; We want the same luxury as clojure...
 ;;-----------------------------------------------------------------------------
@@ -147,7 +150,11 @@
     (error "ensure failed")))
 
 (defun key (hashmap name)
-  (gethash name hashmap))
+  "Go \"down\" an object at key NAME and return that object.
+   Create an empty one if it doesn't exist."
+  (multiple-value-bind (ret existsp)
+      (gethash name hashmap)
+    (if existsp ret (setf (gethash name hashmap) (make-object)))))
 
 (defmacro with (val var &body body)
   `((lambda (,var)
