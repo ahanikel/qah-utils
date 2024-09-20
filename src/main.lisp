@@ -103,6 +103,10 @@
     lst
     :initial-value nil)))
 
+(defun id (x)
+  "The identity function."
+  x)
+
 (defmacro select (&body body)
   (let ((x (gensym)))
     `(filter ,(car body) (lambda (,x) (-> ,x ,@ (cdr body))))))
