@@ -160,9 +160,10 @@
   (setf (gethash name hashmap) new-value))
 
 (defmacro with (val var &body body)
-  `((lambda (,var)
-      ,@body)
-    ,val))
+  "Set the variable VAR to VAL and evaluate the BODY. Return VAR."
+  `(let ((,var ,val))
+    ,@body
+    ,var))
 
 (defmacro foreach (lst &body body)
   (let ((x (gensym)))
