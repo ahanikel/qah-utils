@@ -184,6 +184,11 @@
               #'(lambda (l)
                   (cons item l))))
 
+(defun set-nth (list index value)
+    (loop for i from 0
+          for j in list
+          collect (if (= i index) value j)))
+
 (defmacro with (val var &body body)
   "Set the variable VAR to VAL and evaluate the BODY. Return VAR."
   `(let ((,var ,val))
@@ -198,6 +203,16 @@
                  ((hash-table-p object) (gethash index object))
                  (t (error (format nil "Can't traverse type ~a." (type-of object)))))))
     (reduce #'go-down-key-or-list-item path :initial-value o)))
+
+(defun set-path (o path value)
+  "Follow PATH down the object O and set the value to VALUE. PATH is the list of
+   keys to follow. Return the modified object O."
+  (let ((target (get-path o (butlast path)))
+        (index  (car (last path))))
+    (cond ((listp target) (set-nth target index value))
+          ((hash-table-p target) (set-key target index value))
+          (t (error (format nil "Can't traverse type ~a." (type-of target)))))
+    o))
 
 (defmacro foreach (lst &body body)
   (let ((x (gensym)))
