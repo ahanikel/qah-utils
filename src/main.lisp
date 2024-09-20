@@ -225,6 +225,26 @@
            new-obj))
         (t o)))
 
+(defun diff (o1 o2 handler)
+  "Compares two objects O1 and O2 and calls the HANDLER on any differences.
+   HANDLER is a function which accepts a keyword (either :value-added,
+   :value-changed, or :value-deleted), the key, the old value, and the new value."
+  (maphash #'(lambda (k1 v1)
+               (multiple-value-bind (v2 p2-p)
+                   (gethash k1 o2)
+                 (if p2-p
+                     (unless (equalp v1 v2)
+                       (funcall handler :value-changed k1 v1 v2))
+                     (funcall handler :value-deleted k1 v1 nil))))
+           o1)
+  (maphash #'(lambda (k2 v2)
+               (multiple-value-bind (v1 p1-p)
+                   (gethash k2 o1)
+                 (declare (ignore v1))
+                 (unless p1-p
+                   (funcall handler :value-added k2 nil v2))))
+           o2))
+
 (defmacro foreach (lst &body body)
   (let ((x (gensym)))
     `(mapcar (lambda (,x)
