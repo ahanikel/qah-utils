@@ -144,10 +144,12 @@
                     (f (1+ n) (cons (car l) args) (cdr l) res)))))
     (f 1 (list (car lst)) (cdr lst) nil)))
 
-(defun ensure (bool)
-  "Kind of a monadic WHEN, which throws an error if BOOL isn't true."
-  (unless bool
-    (error "ensure failed")))
+(defmacro ensure (val var &body body)
+  "Set the variable VAR to VAL and evaluate the BODY. If the BODY evaluates
+   to T, return VAL, otherwise signal a condition."
+  `(if (let ((,var ,val)) ,@body)
+       ,val
+       (error (format nil "Guard ~a failed on ~a" (quote ,@body) ,val))))
 
 (defun key (hashmap name)
   "Go \"down\" an object at key NAME and return that object.
