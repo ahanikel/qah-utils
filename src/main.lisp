@@ -156,6 +156,9 @@
       (gethash name hashmap)
     (if existsp ret (setf (gethash name hashmap) (make-object)))))
 
+(defun (setf key) (new-value hashmap name)
+  (setf (gethash name hashmap) new-value))
+
 (defmacro with (val var &body body)
   `((lambda (,var)
       ,@body)
