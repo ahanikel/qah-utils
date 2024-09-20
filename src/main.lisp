@@ -15,7 +15,29 @@
 (defmacro -> (&body body)
   "Evaluates the first expression of BODY, then inserts the result as
    the first argument of the second expression, evaluates that, and so on.
-   The evaluation short-circuits as soon as an expression evaluates to NIL."
+   The evaluation short-circuits as soon as an expression evaluates to NIL.
+   Returns the value of the modified first expression."
+  (let ((tmp (gensym))
+        (first-expr (gensym)))
+    `(let ((,first-expr ,(car body)))
+       ,(append
+         (do* ((b      body
+                       (cdr b))
+               (expr   first-expr
+                       (car b))
+               (res    expr
+                       `(let ((,tmp ,res))
+                          (when ,tmp
+                            ,(cons (car expr)
+                                   (cons tmp (cdr expr)))))))
+              ((null (cdr b)) res))
+         (list first-expr)))))
+
+(defmacro ->. (&body body)
+  "Evaluates the first expression of BODY, then inserts the result as
+   the first argument of the second expression, evaluates that, and so on.
+   The evaluation short-circuits as soon as an expression evaluates to NIL.
+   Returns the value of the last expression."
   (let ((tmp (gensym)))
     (do* ((b      body
                   (cdr b))
