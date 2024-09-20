@@ -273,3 +273,53 @@
                   ((= score max)
                    (push obj result)))))
         (values (nreverse result) max))))
+
+(defvar *!equivs* (make-hash-table :test #'equal))
+
+(defmacro ! (fn)
+  (let ((f (eval fn)))
+    (or (gethash f *!equivs*) f)))
+
+(defun def! (fn fn!)
+  (setf (gethash fn *!equivs*) fn!))
+
+(def! #'remove-if #'delete-if)
+
+(defun memoize (fn)
+  (let ((cache (make-hash-table :test #'equal)))
+    (lambda (&rest args)
+      (multiple-value-bind (val hit) (gethash args cache)
+        (if hit
+            val
+            (setf (gethash args cache)
+                  (apply fn args)))))))
+
+(defun compose (&rest fns)
+  (if fns
+      (let ((fn1 (car (last fns)))
+            (fns (butlast fns)))
+        (lambda (&rest args)
+          (reduce #'funcall fns
+                  :from-end t
+                  :initial-value (apply fn1 args))))
+      #'identity))
+
+(defun fif (if then &optional else)
+  (lambda (x)
+    (if (funcall if x)
+        (funcall then x)
+        (if else (funcall else x)))))
+
+(defun fintersection (fn &rest fns)
+  (if (null fns)
+      fn
+      (let ((chain (apply #'fintersection fns)))
+        (lambda (x)
+          (and (funcall fn x) (funcall chain x))))))
+
+(defun funion (fn &rest fns)
+  (if (null fns)
+      fn
+      (let ((chain (apply #'funion fns)))
+        (lambda (x)
+          (or (funcall fn x) (funcall chain x))))))
