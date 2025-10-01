@@ -1,7 +1,7 @@
 (defsystem "qah-utils"
   :version "0.1.0"
-  :author ""
-  :license ""
+  :author "Axel Hanikel <ahanikel@gmail.com>"
+  :license "BSD"
   :depends-on (:do-urlencode
                :cl-ppcre
                :flexi-streams

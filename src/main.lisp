@@ -1,13 +1,57 @@
 (defpackage qah-utils
   (:use :cl)
-  (:export :-> :->> :doto :_
-           :filter :select :trim-whitespace :map-n
-           :ensure :key :with :foreach
-           :safe-encode :safe-decode
-           :last1 :singlep :append1 :nconc1 :mklist :longer :group
-           :flatten :prune :find2 :before :after :duplicate :split-if))
-
-(in-package #:qah-utils)
+  (:export #:make-object
+           #:->
+           #:->.
+           #:->>
+           #:doto
+           #:_
+           #:filter
+           #:id
+           #:select
+           #:trim-whitespace
+           #:map-n
+           #:ensure
+           #:key
+           #:set-key
+           #:del-key
+           #:update-key
+           #:new-object
+           #:new-list
+           #:add-to-list
+           #:set-nth
+           #:with
+           #:get-path
+           #:set-path
+           #:deep-copy
+           #:diff
+           #:foreach
+           #:uniq
+           #:safe-encode
+           #:safe-decode
+           #:last1
+           #:singlep
+           #:append1
+           #:nconc1
+           #:mklist
+           #:longer
+           #:group
+           #:flatten
+           #:prune
+           #:find2
+           #:before
+           #:after
+           #:duplicate
+           #:split-if
+           #:most
+           #:best
+           #:mostn
+           #:memoize
+           #:compose
+           #:fif
+           #:fintersection
+           #:funion
+           #:run))
 
 (defun make-object ()
   (make-hash-table :test 'equalp))
