@@ -1,7 +1,7 @@
-(defpackage qah-utils/build
-  (:use #:cl
-        #:qah-utils
-        #:cl-api)
+(defpackage #:qah-utils/build
+  (:use :cl
+        :qah-utils
+        :cl-api)
   (:export :build))
 
 (in-package :qah-utils/build)
