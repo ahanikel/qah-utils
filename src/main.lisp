@@ -171,7 +171,7 @@
        (predicate name (search \"farmer\"))))
    returns all deployments whose .metadata.name contains \"farmer\"."
   (let ((x (gensym)))
-    `(filter ,(car body) (lambda (,x) (-> ,x ,@ (cdr body))))))
+    `(filter ,(car body) (lambda (,x) (->. ,x ,@ (cdr body))))))
 
 (defun trim-whitespace (str)
   (string-trim '(#\Space #\Newline #\Backspace #\Tab #\Linefeed #\Page #\Return #\Rubout)
