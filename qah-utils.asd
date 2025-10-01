@@ -3,12 +3,25 @@
   :author ""
   :license ""
   :depends-on (:do-urlencode
-               :cl-ppcre)
+               :cl-ppcre
+               :flexi-streams
+               :bordeaux-threads
+               :vectors)
   :components ((:module "src"
                 :components
-                ((:file "main"))))
+                ((:file "main")
+                 (:file "messaging"))))
   :description ""
-  :in-order-to ((test-op (test-op "qah-utils/tests"))))
+  :in-order-to ((test-op (test-op "qah-utils/tests"))
+                (build-op (build-op "qah-utils/build"))))
+
+(defsystem "qah-utils/build"
+  :depends-on (:qah-utils
+               :cl-api)
+  :components ((:module "build"
+                :components
+                ((:file "build"))))
+  :perform (build-op (op c) (symbol-call :qah-utils/build :build)))
 
 (defsystem "qah-utils/tests"
   :author ""

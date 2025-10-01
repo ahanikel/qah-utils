@@ -464,3 +464,11 @@
       (let ((chain (apply #'funion fns)))
         (lambda (x)
           (or (funcall fn x) (funcall chain x))))))
+
+(defun run (program &rest args)
+  "Call uiop:run-program but with outputs set to *standard-output* by default."
+  (apply #'uiop:run-program
+         program
+         (append (list :output *standard-output*
+                       :error-output *standard-output*)
+                 args)))

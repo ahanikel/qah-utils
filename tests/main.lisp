@@ -1,10 +1,10 @@
-(defpackage utils/tests/main
+(defpackage qah-utils/tests
   (:use :cl
-        :utils
+        :qah-utils
         :rove))
-(in-package :utils/tests/main)
+(in-package :qah-utils/tests)
 
-;; NOTE: To run this test file, execute `(asdf:test-system :utils)' in your Lisp.
+;; NOTE: To run this test file, execute `(asdf:test-system :qah-utils)' in your Lisp.
 
 (deftest test-target-1
   (testing "should (= 1 1) to be true"
