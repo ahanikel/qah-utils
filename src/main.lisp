@@ -5,7 +5,7 @@
            :->.
            :->>
            :doto>
-           :doto
+           :doto>>
            :_
            :filter
            :id
@@ -138,13 +138,13 @@
        ,@ (mapcar (lambda (x) (cons (car x) (cons expr (cdr x)))) (cdr body))
        ,expr)))
 
-(defmacro doto (&body body)
+(defmacro doto>> (&body body)
   "Evaluates the first expression of BODY, then inserts the result as
    the last argument of all the remaining expressions. Returns the
    result of the first expression.
 
    For example:
-   (doto (make-hash-table)
+   (doto>> (make-hash-table)
      ((lambda (x) (setf (gethash \"hi\" x) 1)))
      ((lambda (x) (setf (gethash \"ho\" x) 2))))"
   (let ((expr (gensym)))
