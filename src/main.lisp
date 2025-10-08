@@ -4,6 +4,7 @@
            :->
            :->.
            :->>
+           :doto>
            :doto
            :_
            :filter
@@ -122,6 +123,20 @@
                        ,(cons (car expr)
                               (append (cdr expr) (list tmp)))))))
          ((null (cdr b)) res))))
+
+(defmacro doto> (&body body)
+  "Evaluates the first expression of BODY, then inserts the result as
+   the first argument of all the remaining expressions. Returns the
+   result of the first expression.
+
+   For example:
+   (doto> (make-object)
+     (set-key \"key1\" \"value1\")
+     (set-key \"key2\" \"value2\"))"
+  (let ((expr (gensym)))
+    `(let ((,expr ,(car body)))
+       ,@ (mapcar (lambda (x) (cons (car x) (cons expr (cdr x)))) (cdr body))
+       ,expr)))
 
 (defmacro doto (&body body)
   "Evaluates the first expression of BODY, then inserts the result as
