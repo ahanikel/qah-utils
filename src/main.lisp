@@ -307,6 +307,7 @@
            o2))
 
 (defmacro foreach (lst &body body)
+  "Calls the BODY setting its first argument to each element in LST."
   (let ((x (gensym)))
     `(mapcar (lambda (,x)
                (-> ,x ,@body))
